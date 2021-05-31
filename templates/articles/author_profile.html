@@ -1,0 +1,13 @@
+{% extends 'articles/base.html' %}
+{% load my_tags %}
+{% block content %}
+    {% if author_banned.is_active %}
+        <div class="verify-block">
+            <h1 style="color:red">Пользователь заблокирован</h1>
+        </div>
+    {% endif %}
+    {% include 'articles/includes/inc_read_profile.html' %}
+    {% if is_staff %}
+        {% include 'moderator/includes/ban_buttons.html' %}
+    {% endif %}
+{% endblock content %}

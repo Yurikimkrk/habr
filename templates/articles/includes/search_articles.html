@@ -1,0 +1,32 @@
+{% extends 'articles/base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-12">
+            <!-- Начало блока сортировки -->
+{#            {% include 'articles/includes/sorted/sorted_search.html' %}#}
+            <!-- Конец блока сортировки -->
+            {% if articles %}
+                <div class="heading search-head mb-4">
+                    <h4>По вашему запросу&nbsp;</h4>
+                    <p class="search-text">"{{ value_search|truncatechars:20 }}"</p>
+                    <h4 style="color: green">&nbsp;найдено:</h4>
+                </div>
+                {% include 'articles/includes/string_output.html' %}
+                <!-- Начало блока пагинации -->
+                {% if articles.paginator.count > 20 %}
+                    {% include 'articles/includes/paginations/paggination_search.html' %}
+                {% endif %}
+                <!-- Конец блока пагинации -->
+            {% else %}
+                <div class="heading search-head mb-4">
+                    <h4>По вашему запросу&nbsp;</h4>
+                    <p class="search-text">"{{ value_search|truncatechars:20 }}"</p>
+                    <h4 style="color: darkred">&nbsp;ничего не найдено</h4>
+                </div>
+            {% endif %}
+            
+        </div>
+    </div>
+{% endblock content %}

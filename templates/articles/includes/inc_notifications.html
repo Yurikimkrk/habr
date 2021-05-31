@@ -1,0 +1,126 @@
+{% load static %}
+{% if notifications %}
+    <a class="bell-num" style="color:red">{{ notifications|length }}</a>
+{% endif %}
+<div class="bell post-link mini-title">
+    <a type="" id="dropdownMenuLink"
+       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <img src="{% static 'svg/bell-2.ico' %}" width="20" height="20"/>
+    </a>
+    <div class="dropdown-menu menu-scroll" aria-labelledby="dropdownMenu2"
+         style="font-size: small; padding: 5px 20px">
+        {%if notifications%}
+            <div style="height: 6px"></div>
+        {% for key, value in notifications %}
+            {#    комментарии и ответы    #}
+            {% if key == 'comment' %}
+                <div>
+                    <div>
+                        <a href="{% url 'articles:author_profile' value.author.id %}" class="post-author">
+                            {{ value.author }}
+                        </a>
+                        &nbsp;коммент к статье&nbsp;
+                        <a href="{% url 'articles:article' value.article.id %}">
+                            {{ value.article|truncatechars:30 }}</a>
+                    </div>
+                    {% include 'articles/includes/inc_btn_del_notification.html' %}
+                </div>
+                <hr>
+            {% elif key == 'answered_you' %}
+                <div>
+                    <div>
+                        <a href="{% url 'articles:author_profile' value.author.id %}" class="post-author">
+                            {{ value.author }}
+                        </a>
+                        &nbsp;ответил&nbsp;
+                        <a href="{% url 'articles:article' value.article.id %}">
+                            {{ value.article|truncatechars:30 }}</a>
+                    </div>
+                    {% include 'articles/includes/inc_btn_del_notification.html' %}
+                </div>
+                <hr>
+                {#            лайки\дизлайки    #}
+            {% elif key == 'like' %}
+                <div>
+                    <div>
+                        <a href="{% url 'articles:author_profile' value.user.id %}" class="post-author">
+                            {{ value.user }}
+                        </a>
+                        &nbsp; <img class ="img-notif" src="{% static 'svg/like(filled).svg' %}"/>&nbsp; статью &nbsp;
+                        <a href="{% url 'articles:article' value.article.id %}">{{ value.article|truncatechars:30 }}</a>
+                    </div>
+                    {% include 'articles/includes/inc_btn_del_notification.html' %}
+                </div>
+                <hr>
+            {% elif key == 'dislike' %}
+                <div>
+                    <div>
+                        <a href="{% url 'articles:author_profile' value.user.id %}" class="post-author">
+                            {{ value.user }}
+                        </a>
+                        &nbsp; <img class ="img-notif" src="{% static 'svg/dislike(filled).svg' %}"/>&nbsp; статью &nbsp;
+                        <a href="{% url 'articles:article' value.article.id %}">{{ value.article|truncatechars:30 }}</a>
+                    </div>
+                    {% include 'articles/includes/inc_btn_del_notification.html' %}
+                </div>
+                <hr>
+                {#    карма   #}
+            {% elif key == 'like_karma' %}
+                <div>
+                    <div>
+                        <a href="{% url 'articles:author_profile' value.user.id %}" class="post-author">
+                            {{ value.user }}
+                        </a>
+                        &nbsp; <img class ="img-notif" src="{% static 'svg/like(filled).svg' %}"/> карму&nbsp;
+                    </div>
+                    {% include 'articles/includes/inc_btn_del_notification.html' %}
+                </div>
+                <hr>
+            {% elif key == 'dislike_karma' %}
+                <div>
+                    <div>
+                        <a href="{% url 'articles:author_profile' value.user.id %}" class="post-author">
+                            {{ value.user }}
+                        </a>
+                        &nbsp; <img class ="img-notif" src="{% static 'svg/dislike(filled).svg' %}"/> карму&nbsp;
+                    </div>
+                    {% include 'articles/includes/inc_btn_del_notification.html' %}
+                </div>
+                <hr>
+            {% elif key == 'comment_like' %}
+                <div>
+                    <div>
+                        <a href="{% url 'articles:author_profile' value.user.id %}" class="post-author">
+                            {{ value.user }}
+                        </a>
+                        &nbsp; <img class ="img-notif" src="{% static 'svg/like(filled).svg' %}"/>&nbsp;коммент&nbsp;
+                        <a >{{ value.comment.body|truncatechars:30 }}</a>
+                    </div>
+                    {% include 'articles/includes/inc_btn_del_notification.html' %}
+                </div>
+                <hr>
+            {% elif key == 'comment_dislike' %}
+                <div>
+                    <div>
+                        <a href="{% url 'articles:author_profile' value.user.id %}" class="post-author">
+                            {{ value.user }}
+                        </a>
+                        &nbsp; <img class ="img-notif" src="{% static 'svg/dislike(filled).svg' %}"/>&nbsp;коммент&nbsp;
+                        <a >{{ value.comment.body|truncatechars:30 }}</a>
+                    </div>
+                    {% include 'articles/includes/inc_btn_del_notification.html' %}
+                </div>
+                <hr>
+            {% endif %}
+        {% endfor %}
+        {% if notifications %}
+            <div class="mb-2" style="justify-content: center"><a href="{% url 'articles:all_viewed' %}">
+                <button type="button" title="отметить все уведомления как просмотренные">очистить все уведомления
+                </button>
+            </a></div>
+        {% endif %}
+        {%else%}
+        <div style="justify-content: center">уведомлений нет</div>
+        {% endif %}
+    </div>
+</div>

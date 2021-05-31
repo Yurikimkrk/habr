@@ -1,0 +1,29 @@
+{% extends 'articles/base.html' %}
+{% load static %}
+{% block content %}
+    {% include 'account/includes/inc_menu.html' %}
+    <div class="container mt-4 add_art">
+        <form
+                action=""
+                method="post"
+                enctype="multipart/form-data"
+                style="max-width: 80%; margin: 0 auto"
+        >
+            {% csrf_token %}
+            <div class="add-article">
+                {{ article_add.as_table }}
+            </div>
+            <br/>
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+<!--            <a class="btn btn-outline-primary" href="javascript:history.go(-1)">Go Back</a>-->
+            <button class="btn btn-danger">
+                <a style="color:white" href="{% url 'account:read_profile' %}">Назад</a>
+            </button>
+        </form>
+    </div>
+    {% include 'account/includes/inc_notification_of_change_data.html' %}
+{% endblock content %}
+{% block js %}
+    {{ block.super }}
+    {{ article_add.media }}
+{% endblock js %}

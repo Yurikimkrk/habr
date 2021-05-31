@@ -1,0 +1,20 @@
+{% load static %}
+
+<nav class="sorted-menu">
+    <form role="sorted" method="GET" id="form-sorted" data-url=
+            "{% url 'articles:sorted_articles' 1 %}" style="display: block">
+        <div class="btn-group mb-2" role="group" aria-label="Basic radio toggle button group">
+            <input class="btn-check sorted-input" type="radio" name="sorted" value="-date" id="-date" autocomplete="off">
+            <label class="btn btn-outline-secondary btn-sm"  for="-date">По дате</label>
+
+            <input class="btn-check sorted-input" type="radio" name="sorted" value="like" id="like" autocomplete="off">
+            <label class="btn btn-outline-secondary btn-sm" for="like">Рейтингу</label>
+
+            <input class="btn-check sorted-input" type="radio" name="sorted" value="comments" id="comments" autocomplete="off">
+            <label class="btn btn-outline-secondary btn-sm" for="comments">Комментам</label>
+
+            <input class="btn-check sorted-input" type="radio" name="sorted" value="view" id="view" autocomplete="off">
+            <label class="btn btn-outline-secondary btn-sm" for="view">Просмотрам</label>
+        </div>
+    </form>
+</nav>

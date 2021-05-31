@@ -1,0 +1,122 @@
+{% load static %}
+{% load my_tags %}
+
+<nav class="main-nav navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container">
+        <a href="{% url 'articles:main_page' %}">
+            <div class="logo_block">
+                <div class="img-logo"><img class="img_in_block" src="{% static 'svg/logo.svg' %}" alt=""/></div>
+                <div class="logo">Sputnik</div>
+            </div>
+        </a>
+        {% if not is_banned %}
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 hubs">
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.route == 'all/' %} active {% endif %}"
+                       href="{% url 'articles:all_hubs' %}">Все хабы</a>
+                </li>
+                {% for hub in hubs_menu %}
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.kwargs.pk == hub.id %} active {% endif %}"
+                           href="{% url 'articles:hub' hub.id %}">{{ hub.hub }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+            <div class="navbar" id="navbarToggler02">
+                <ul class="navbar-nav me-auto mb-lg-0 icon">
+                    <!-- Начало блока поиска --->
+                    <li class="icon-item nav-item">
+                        <div class="form-search">
+                            <form class="search" role="search" id="search-articles-form" method="GET"
+                                  action="{% url 'articles:search_articles' 1 %}">
+                            </form>
+                        </div>
+                        <button type="button" class="btn btn-secondary magnifier" data-toggle="modal"
+                                data-target="#search-modal" onclick="setTimeout(focusOnInput, 500)">
+                            <img src="{% static 'svg/magnifier-white.svg' %}" class="img_in_block" alt="">
+                        </button>
+                    </li>
+                    <!-- Конец блока поиска --->
+                </ul>
+                {% if user.is_authenticated %}
+                    {% if not user.is_confirmed %}
+                        <a class="warning-verify-btn" data-toggle="modal" data-target=".modal">
+                            <img class="warning-verify" src="{% static 'img/danger.svg' %}"
+                                 title="Подтвердите учётную запись!">
+                        </a>
+                    {% endif %}
+                    <!-- Начало блока уведомлений -->
+                    {% include 'articles/includes/inc_notifications.html' %}
+                    <!-- Конец блока уведомдлений -->
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <div class="author-avatar-menu-text">{{ user.habruserprofile.first_name|default:user.username }}</div>
+                            <div class="author-avatar-menu"><img class="img_in_block"
+                                                                 src="{{ user.habruserprofile.avatar|media_folder_users }}">
+                            </div>
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                            {% if user.is_superuser %}
+                                <a href="{% url 'admin:index' %}">
+                                    <button class="dropdown-item" type="button">Админка</button>
+                                </a>
+                            {% endif %}
+                            {% if is_staff or user.is_superuser %}
+                                <a href="{% url 'moderator:complaints' %}">
+                                    <button class="dropdown-item" type="button">Модераторская</button>
+                                </a>
+                            {% endif %}
+                            <a href="{% url 'account:read_profile' %}">
+                                <button class="dropdown-item" type="button">Личный кабинет</button>
+                            </a>
+                            {% if user.is_confirmed %}
+                                <a href="{% url 'account:bookmarks_page' %}">
+                                    <button class="dropdown-item" type="button">Закладки</button>
+                                </a>
+                                <a href="{% url 'account:add_article' %}">
+                                    <button class="dropdown-item" type="button">Написать статью</button>
+                                </a>
+                            {% endif %}
+                            <div class="dropdown-divider"></div>
+                            <a href="{% url 'auth:logout' %}">
+                                <button class="dropdown-item" type="button">Выход</button>
+                            </a>
+                        </div>
+                    </div>
+                {% else %}
+                    {% if check_verify %}
+                        <img class="warning-verify" src="{% static 'img/danger.svg' %}" alt="warning"
+                             title="Подтвердите свою учётную запись!">
+                        <a class="regist btn btn-outline-light me-2" href="{% url 'auth:register' %}">Регистрация</a>
+                    {% else %}
+                        <a class="btn btn-outline-light me-2" href="{% url 'auth:login' %}">Войти</a>
+                        <a class="regist btn btn-outline-light me-2" href="{% url 'auth:register' %}">Регистрация</a>
+                    {% endif %}
+                {% endif %}
+            </div>
+        {% else %}
+            <a class="btn btn-outline-light me-2" href="{% url 'auth:logout' %}">Выход</a>
+        {% endif %}
+    </div>
+    <div class="mobile_hub">
+        {% if not is_banned %}
+            <ul class="navbar-mobile navbar-nav me-auto mb-2">
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.route == 'all/' %} active {% endif %}"
+                       href="{% url 'articles:all_hubs' %}">Все</a>
+                </li>
+                {% for hub in hubs_menu %}
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.kwargs.pk == hub.id %} active {% endif %}"
+                           href="{% url 'articles:hub' hub.id %}">{{ hub.hub }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+</nav>
+
+{% include 'articles/includes/modals/repeat_send_email.html' %}
+{% include 'articles/includes/modals/success_send_email.html' %}
+{% include 'articles/includes/modals/search_form.html' %}
